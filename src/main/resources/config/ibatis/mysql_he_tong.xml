@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+	<!-- ${table.comment} -->
+	<typeAlias alias="HeTongModel" type="com.iam_vip.kp.logic.model.HeTongModel" />
+
+	<sql id="TABLE_HETONG"> he_tong </sql>
+
+
+
+
+
+	<insert id="HeTongModel.save" parameterClass="HeTongModel">
+		INSERT INTO
+		<include refid="TABLE_HETONG" />
+		<dynamic prepend="(" close=")">
+			<isNotEmpty property="who" prepend=","> who </isNotEmpty>
+			<isNotEmpty property="address" prepend=","> address </isNotEmpty>
+			<isNotEmpty property="signDate" prepend=","> signDate </isNotEmpty>
+			<isNotEmpty property="remark" prepend=","> remark </isNotEmpty>
+		</dynamic>
+		VALUES
+		<dynamic prepend="(" close=")">
+			<isNotEmpty property="who" prepend=","> #who# </isNotEmpty>
+			<isNotEmpty property="address" prepend=","> #address# </isNotEmpty>
+			<isNotEmpty property="signDate" prepend=","> #signDate# </isNotEmpty>
+			<isNotEmpty property="remark" prepend=","> #remark# </isNotEmpty>
+		</dynamic>
+	</insert>
+
+	<insert id="HeTongModel.saveReturnInt" parameterClass="HeTongModel">
+		INSERT INTO
+		<include refid="TABLE_HETONG" />
+		<dynamic prepend="(" close=")">
+			<isNotEmpty property="who" prepend=","> who </isNotEmpty>
+			<isNotEmpty property="address" prepend=","> address </isNotEmpty>
+			<isNotEmpty property="signDate" prepend=","> signDate </isNotEmpty>
+			<isNotEmpty property="remark" prepend=","> remark </isNotEmpty>
+		</dynamic>
+		VALUES
+		<dynamic prepend="(" close=")">
+			<isNotEmpty property="who" prepend=","> #who# </isNotEmpty>
+			<isNotEmpty property="address" prepend=","> #address# </isNotEmpty>
+			<isNotEmpty property="signDate" prepend=","> #signDate# </isNotEmpty>
+			<isNotEmpty property="remark" prepend=","> #remark# </isNotEmpty>
+		</dynamic>
+		<selectKey resultClass="int" keyProperty="htID">
+			SELECT LAST_INSERT_ID() AS htID    
+	    </selectKey>
+	</insert>
+
+	<insert id="HeTongModel.saveReturnLong" parameterClass="HeTongModel">
+		INSERT INTO
+		<include refid="TABLE_HETONG" />
+		<dynamic prepend="(" close=")">
+			<isNotEmpty property="who" prepend=","> who </isNotEmpty>
+			<isNotEmpty property="address" prepend=","> address </isNotEmpty>
+			<isNotEmpty property="signDate" prepend=","> signDate </isNotEmpty>
+			<isNotEmpty property="remark" prepend=","> remark </isNotEmpty>
+		</dynamic>
+		VALUES
+		<dynamic prepend="(" close=")">
+			<isNotEmpty property="who" prepend=","> #who# </isNotEmpty>
+			<isNotEmpty property="address" prepend=","> #address# </isNotEmpty>
+			<isNotEmpty property="signDate" prepend=","> #signDate# </isNotEmpty>
+			<isNotEmpty property="remark" prepend=","> #remark# </isNotEmpty>
+		</dynamic>
+		<selectKey resultClass="long" keyProperty="htID">
+			SELECT LAST_INSERT_ID() AS htID    
+	    </selectKey>
+	</insert>
+	
+	
+	
+	
+	
+	<delete id="HeTongModel.delete">
+		DELETE FROM
+		<include refid="TABLE_HETONG" />
+		WHERE htID = #htID#
+	</delete>
+	
+	<delete id="HeTongModel.deleteMulti">
+		DELETE FROM
+		<include refid="TABLE_HETONG" />
+		WHERE
+		<dynamic prepend=" ">
+			<isNotEmpty property="htID" prepend="AND"> htID = #htID# </isNotEmpty>
+			<isNotEmpty property="who" prepend="AND"> who = #who# </isNotEmpty>
+			<isNotEmpty property="address" prepend="AND"> address = #address# </isNotEmpty>
+			<isNotEmpty property="signDate" prepend="AND"> signDate = #signDate# </isNotEmpty>
+			<isNotEmpty property="remark" prepend="AND"> remark = #remark# </isNotEmpty>
+		</dynamic>
+	</delete>
+
+	<delete id="HeTongModel.deleteByIDs" parameterClass="java.util.Map">
+		DELETE FROM
+		<include refid="TABLE_HETONG" />
+		WHERE
+		<iterate conjunction="OR" open="(" close=")" property="array">
+			htID = $array[]$
+		</iterate>
+		<isNotEmpty property="param.who" prepend="AND"> who = #param.who# </isNotEmpty>
+		<isNotEmpty property="param.address" prepend="AND"> address = #param.address# </isNotEmpty>
+		<isNotEmpty property="param.signDate" prepend="AND"> signDate = #param.signDate# </isNotEmpty>
+		<isNotEmpty property="param.remark" prepend="AND"> remark = #param.remark# </isNotEmpty>
+	</delete>
+	
+	
+	
+	
+	
+	<update id="HeTongModel.update">
+		UPDATE
+		<include refid="TABLE_HETONG" />
+		<dynamic prepend="SET">	
+			<isNotNull prepend="," property="who"> who = #who# </isNotNull>
+			<isNotNull prepend="," property="address"> address = #address# </isNotNull>
+			<isNotNull prepend="," property="signDate"> signDate = #signDate# </isNotNull>
+			<isNotNull prepend="," property="remark"> remark = #remark# </isNotNull>
+		</dynamic>
+		WHERE htID = #htID#
+	</update>
+	
+	<update id="HeTongModel.updateMulti">
+		UPDATE
+		<include refid="TABLE_HETONG" />
+		<dynamic prepend="SET">	
+			<isNotNull prepend="," property="to.who"> who = #to.who# </isNotNull>
+			<isNotNull prepend="," property="to.address"> address = #to.address# </isNotNull>
+			<isNotNull prepend="," property="to.signDate"> signDate = #to.signDate# </isNotNull>
+			<isNotNull prepend="," property="to.remark"> remark = #to.remark# </isNotNull>
+		</dynamic>
+		<isNull property="param"> error here </isNull>
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="param.who" prepend="AND"> who = #param.who# </isNotEmpty>
+			<isNotEmpty property="param.address" prepend="AND"> address = #param.address# </isNotEmpty>
+			<isNotEmpty property="param.signDate" prepend="AND"> signDate = #param.signDate# </isNotEmpty>
+			<isNotEmpty property="param.remark" prepend="AND"> remark = #param.remark# </isNotEmpty>
+		</dynamic>
+	</update>
+
+
+
+
+	
+	<select id="HeTongModel.getOneByPK" remapResults="true" resultClass="HeTongModel">
+		SELECT $columns$ FROM
+		<include refid="TABLE_HETONG" />
+		WHERE htID = #param#
+	</select>
+	
+	<select id="HeTongModel.getOne" remapResults="true" resultClass="HeTongModel">
+		SELECT $columns$ FROM
+		<include refid="TABLE_HETONG" />
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="param.htID" prepend="AND"> htID = #param.htID# </isNotEmpty>
+			<isNotEmpty property="param.who" prepend="AND"> who = #param.who# </isNotEmpty>
+			<isNotEmpty property="param.address" prepend="AND"> address = #param.address# </isNotEmpty>
+			<isNotEmpty property="param.signDate" prepend="AND"> signDate = #param.signDate# </isNotEmpty>
+			<isNotEmpty property="param.remark" prepend="AND"> remark = #param.remark# </isNotEmpty>
+		</dynamic>
+		LIMIT 1
+	</select>
+	
+	<select id="HeTongModel.getList" remapResults="true" resultClass="HeTongModel">
+		SELECT $columns$ FROM
+		<include refid="TABLE_HETONG" />
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="param.who" prepend="AND"> who = #param.who# </isNotEmpty>
+			<isNotEmpty property="param.address" prepend="AND"> address = #param.address# </isNotEmpty>
+			<isNotEmpty property="param.signDate" prepend="AND"> signDate = #param.signDate# </isNotEmpty>
+			<isNotEmpty property="param.remark" prepend="AND"> remark = #param.remark# </isNotEmpty>
+		</dynamic>
+		<isNotNull property="sort">
+		<isNotEmpty property="sort"> 
+			ORDER BY $sort$ $order$
+		</isNotEmpty>
+		</isNotNull>
+		<isNotNull property="length">
+		<isNotEmpty property="length"> 
+			LIMIT $length$
+		</isNotEmpty>
+		</isNotNull>
+	</select>
+	
+	<select id="HeTongModel.getCountInt" resultClass="int">
+		SELECT COUNT(*) FROM
+		<include refid="TABLE_HETONG" />
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="htID" prepend="AND"> htID = #htID# </isNotEmpty>
+			<isNotEmpty property="who" prepend="AND"> who = #who# </isNotEmpty>
+			<isNotEmpty property="address" prepend="AND"> address = #address# </isNotEmpty>
+			<isNotEmpty property="signDate" prepend="AND"> signDate = #signDate# </isNotEmpty>
+			<isNotEmpty property="remark" prepend="AND"> remark = #remark# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="HeTongModel.getCountLong" resultClass="long">
+		SELECT COUNT(*) FROM
+		<include refid="TABLE_HETONG" />
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="who" prepend="AND"> who = #who# </isNotEmpty>
+			<isNotEmpty property="address" prepend="AND"> address = #address# </isNotEmpty>
+			<isNotEmpty property="signDate" prepend="AND"> signDate = #signDate# </isNotEmpty>
+			<isNotEmpty property="remark" prepend="AND"> remark = #remark# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="HeTongModel.getCountLongMap" resultClass="long">
+		SELECT COUNT(*) FROM
+		<include refid="TABLE_HETONG" />
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="param.who" prepend="AND"> who = #param.who# </isNotEmpty>
+			<isNotEmpty property="param.address" prepend="AND"> address = #param.address# </isNotEmpty>
+			<isNotEmpty property="param.signDate" prepend="AND"> signDate = #param.signDate# </isNotEmpty>
+			<isNotEmpty property="param.remark" prepend="AND"> remark = #param.remark# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="HeTongModel.getPageList" remapResults="true" resultClass="HeTongModel" parameterClass="java.util.Map">
+		SELECT $columns$ FROM
+		<include refid="TABLE_HETONG" />
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="param.who" prepend="AND"> who = #param.who# </isNotEmpty>
+			<isNotEmpty property="param.address" prepend="AND"> address = #param.address# </isNotEmpty>
+			<isNotEmpty property="param.signDate" prepend="AND"> signDate = #param.signDate# </isNotEmpty>
+			<isNotEmpty property="param.remark" prepend="AND"> remark = #param.remark# </isNotEmpty>
+		</dynamic>
+		ORDER BY $sort$ $order$
+		LIMIT $begin$, $end$
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</sqlMap>

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+	<!-- ${table.comment} -->
+	<typeAlias alias="FuJianModel" type="com.iam_vip.kp.logic.model.FuJianModel" />
+
+	<sql id="TABLE_FUJIAN"> fu_jian </sql>
+
+
+
+
+
+	<insert id="FuJianModel.save" parameterClass="FuJianModel">
+		INSERT INTO
+		<include refid="TABLE_FUJIAN" />
+		<dynamic prepend="(" close=")">
+			<isNotEmpty property="refNID" prepend=","> refNID </isNotEmpty>
+			<isNotEmpty property="refSID" prepend=","> refSID </isNotEmpty>
+			<isNotEmpty property="timeline" prepend=","> timeline </isNotEmpty>
+			<isNotEmpty property="stepNum" prepend=","> stepNum </isNotEmpty>
+		</dynamic>
+		VALUES
+		<dynamic prepend="(" close=")">
+			<isNotEmpty property="refNID" prepend=","> #refNID# </isNotEmpty>
+			<isNotEmpty property="refSID" prepend=","> #refSID# </isNotEmpty>
+			<isNotEmpty property="timeline" prepend=","> #timeline# </isNotEmpty>
+			<isNotEmpty property="stepNum" prepend=","> #stepNum# </isNotEmpty>
+		</dynamic>
+	</insert>
+
+	<insert id="FuJianModel.saveReturnInt" parameterClass="FuJianModel">
+		INSERT INTO
+		<include refid="TABLE_FUJIAN" />
+		<dynamic prepend="(" close=")">
+			<isNotEmpty property="refNID" prepend=","> refNID </isNotEmpty>
+			<isNotEmpty property="refSID" prepend=","> refSID </isNotEmpty>
+			<isNotEmpty property="timeline" prepend=","> timeline </isNotEmpty>
+			<isNotEmpty property="stepNum" prepend=","> stepNum </isNotEmpty>
+		</dynamic>
+		VALUES
+		<dynamic prepend="(" close=")">
+			<isNotEmpty property="refNID" prepend=","> #refNID# </isNotEmpty>
+			<isNotEmpty property="refSID" prepend=","> #refSID# </isNotEmpty>
+			<isNotEmpty property="timeline" prepend=","> #timeline# </isNotEmpty>
+			<isNotEmpty property="stepNum" prepend=","> #stepNum# </isNotEmpty>
+		</dynamic>
+		<selectKey resultClass="int" keyProperty="fuJianID">
+			SELECT LAST_INSERT_ID() AS fuJianID    
+	    </selectKey>
+	</insert>
+
+	<insert id="FuJianModel.saveReturnLong" parameterClass="FuJianModel">
+		INSERT INTO
+		<include refid="TABLE_FUJIAN" />
+		<dynamic prepend="(" close=")">
+			<isNotEmpty property="refNID" prepend=","> refNID </isNotEmpty>
+			<isNotEmpty property="refSID" prepend=","> refSID </isNotEmpty>
+			<isNotEmpty property="timeline" prepend=","> timeline </isNotEmpty>
+			<isNotEmpty property="stepNum" prepend=","> stepNum </isNotEmpty>
+		</dynamic>
+		VALUES
+		<dynamic prepend="(" close=")">
+			<isNotEmpty property="refNID" prepend=","> #refNID# </isNotEmpty>
+			<isNotEmpty property="refSID" prepend=","> #refSID# </isNotEmpty>
+			<isNotEmpty property="timeline" prepend=","> #timeline# </isNotEmpty>
+			<isNotEmpty property="stepNum" prepend=","> #stepNum# </isNotEmpty>
+		</dynamic>
+		<selectKey resultClass="long" keyProperty="fuJianID">
+			SELECT LAST_INSERT_ID() AS fuJianID    
+	    </selectKey>
+	</insert>
+	
+	
+	
+	
+	
+	<delete id="FuJianModel.delete">
+		DELETE FROM
+		<include refid="TABLE_FUJIAN" />
+		WHERE fuJianID = #fuJianID#
+	</delete>
+	
+	<delete id="FuJianModel.deleteMulti">
+		DELETE FROM
+		<include refid="TABLE_FUJIAN" />
+		WHERE
+		<dynamic prepend=" ">
+			<isNotEmpty property="fuJianID" prepend="AND"> fuJianID = #fuJianID# </isNotEmpty>
+			<isNotEmpty property="refNID" prepend="AND"> refNID = #refNID# </isNotEmpty>
+			<isNotEmpty property="refSID" prepend="AND"> refSID = #refSID# </isNotEmpty>
+			<isNotEmpty property="timeline" prepend="AND"> timeline = #timeline# </isNotEmpty>
+			<isNotEmpty property="stepNum" prepend="AND"> stepNum = #stepNum# </isNotEmpty>
+		</dynamic>
+	</delete>
+
+	<delete id="FuJianModel.deleteByIDs" parameterClass="java.util.Map">
+		DELETE FROM
+		<include refid="TABLE_FUJIAN" />
+		WHERE
+		<iterate conjunction="OR" open="(" close=")" property="array">
+			fuJianID = $array[]$
+		</iterate>
+		<isNotEmpty property="param.refNID" prepend="AND"> refNID = #param.refNID# </isNotEmpty>
+		<isNotEmpty property="param.refSID" prepend="AND"> refSID = #param.refSID# </isNotEmpty>
+		<isNotEmpty property="param.timeline" prepend="AND"> timeline = #param.timeline# </isNotEmpty>
+		<isNotEmpty property="param.stepNum" prepend="AND"> stepNum = #param.stepNum# </isNotEmpty>
+	</delete>
+	
+	
+	
+	
+	
+	<update id="FuJianModel.update">
+		UPDATE
+		<include refid="TABLE_FUJIAN" />
+		<dynamic prepend="SET">	
+			<isNotNull prepend="," property="refNID"> refNID = #refNID# </isNotNull>
+			<isNotNull prepend="," property="refSID"> refSID = #refSID# </isNotNull>
+			<isNotNull prepend="," property="timeline"> timeline = #timeline# </isNotNull>
+			<isNotNull prepend="," property="stepNum"> stepNum = #stepNum# </isNotNull>
+		</dynamic>
+		WHERE fuJianID = #fuJianID#
+	</update>
+	
+	<update id="FuJianModel.updateMulti">
+		UPDATE
+		<include refid="TABLE_FUJIAN" />
+		<dynamic prepend="SET">	
+			<isNotNull prepend="," property="to.refNID"> refNID = #to.refNID# </isNotNull>
+			<isNotNull prepend="," property="to.refSID"> refSID = #to.refSID# </isNotNull>
+			<isNotNull prepend="," property="to.timeline"> timeline = #to.timeline# </isNotNull>
+			<isNotNull prepend="," property="to.stepNum"> stepNum = #to.stepNum# </isNotNull>
+		</dynamic>
+		<isNull property="param"> error here </isNull>
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="param.refNID" prepend="AND"> refNID = #param.refNID# </isNotEmpty>
+			<isNotEmpty property="param.refSID" prepend="AND"> refSID = #param.refSID# </isNotEmpty>
+			<isNotEmpty property="param.timeline" prepend="AND"> timeline = #param.timeline# </isNotEmpty>
+			<isNotEmpty property="param.stepNum" prepend="AND"> stepNum = #param.stepNum# </isNotEmpty>
+		</dynamic>
+	</update>
+
+
+
+
+	
+	<select id="FuJianModel.getOneByPK" remapResults="true" resultClass="FuJianModel">
+		SELECT $columns$ FROM
+		<include refid="TABLE_FUJIAN" />
+		WHERE fuJianID = #param#
+	</select>
+	
+	<select id="FuJianModel.getOne" remapResults="true" resultClass="FuJianModel">
+		SELECT $columns$ FROM
+		<include refid="TABLE_FUJIAN" />
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="param.fuJianID" prepend="AND"> fuJianID = #param.fuJianID# </isNotEmpty>
+			<isNotEmpty property="param.refNID" prepend="AND"> refNID = #param.refNID# </isNotEmpty>
+			<isNotEmpty property="param.refSID" prepend="AND"> refSID = #param.refSID# </isNotEmpty>
+			<isNotEmpty property="param.timeline" prepend="AND"> timeline = #param.timeline# </isNotEmpty>
+			<isNotEmpty property="param.stepNum" prepend="AND"> stepNum = #param.stepNum# </isNotEmpty>
+		</dynamic>
+		LIMIT 1
+	</select>
+	
+	<select id="FuJianModel.getList" remapResults="true" resultClass="FuJianModel">
+		SELECT $columns$ FROM
+		<include refid="TABLE_FUJIAN" />
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="param.refNID" prepend="AND"> refNID = #param.refNID# </isNotEmpty>
+			<isNotEmpty property="param.refSID" prepend="AND"> refSID = #param.refSID# </isNotEmpty>
+			<isNotEmpty property="param.timeline" prepend="AND"> timeline = #param.timeline# </isNotEmpty>
+			<isNotEmpty property="param.stepNum" prepend="AND"> stepNum = #param.stepNum# </isNotEmpty>
+		</dynamic>
+		<isNotNull property="sort">
+		<isNotEmpty property="sort"> 
+			ORDER BY $sort$ $order$
+		</isNotEmpty>
+		</isNotNull>
+		<isNotNull property="length">
+		<isNotEmpty property="length"> 
+			LIMIT $length$
+		</isNotEmpty>
+		</isNotNull>
+	</select>
+	
+	<select id="FuJianModel.getCountInt" resultClass="int">
+		SELECT COUNT(*) FROM
+		<include refid="TABLE_FUJIAN" />
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="fuJianID" prepend="AND"> fuJianID = #fuJianID# </isNotEmpty>
+			<isNotEmpty property="refNID" prepend="AND"> refNID = #refNID# </isNotEmpty>
+			<isNotEmpty property="refSID" prepend="AND"> refSID = #refSID# </isNotEmpty>
+			<isNotEmpty property="timeline" prepend="AND"> timeline = #timeline# </isNotEmpty>
+			<isNotEmpty property="stepNum" prepend="AND"> stepNum = #stepNum# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="FuJianModel.getCountLong" resultClass="long">
+		SELECT COUNT(*) FROM
+		<include refid="TABLE_FUJIAN" />
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="refNID" prepend="AND"> refNID = #refNID# </isNotEmpty>
+			<isNotEmpty property="refSID" prepend="AND"> refSID = #refSID# </isNotEmpty>
+			<isNotEmpty property="timeline" prepend="AND"> timeline = #timeline# </isNotEmpty>
+			<isNotEmpty property="stepNum" prepend="AND"> stepNum = #stepNum# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="FuJianModel.getCountLongMap" resultClass="long">
+		SELECT COUNT(*) FROM
+		<include refid="TABLE_FUJIAN" />
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="param.refNID" prepend="AND"> refNID = #param.refNID# </isNotEmpty>
+			<isNotEmpty property="param.refSID" prepend="AND"> refSID = #param.refSID# </isNotEmpty>
+			<isNotEmpty property="param.timeline" prepend="AND"> timeline = #param.timeline# </isNotEmpty>
+			<isNotEmpty property="param.stepNum" prepend="AND"> stepNum = #param.stepNum# </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="FuJianModel.getPageList" remapResults="true" resultClass="FuJianModel" parameterClass="java.util.Map">
+		SELECT $columns$ FROM
+		<include refid="TABLE_FUJIAN" />
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="param.refNID" prepend="AND"> refNID = #param.refNID# </isNotEmpty>
+			<isNotEmpty property="param.refSID" prepend="AND"> refSID = #param.refSID# </isNotEmpty>
+			<isNotEmpty property="param.timeline" prepend="AND"> timeline = #param.timeline# </isNotEmpty>
+			<isNotEmpty property="param.stepNum" prepend="AND"> stepNum = #param.stepNum# </isNotEmpty>
+		</dynamic>
+		ORDER BY $sort$ $order$
+		LIMIT $begin$, $end$
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</sqlMap>
