@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.RequestContext;
 
 import com.iam_vip.kp.logic.model.__Model;
@@ -133,6 +134,26 @@ public class __Request implements IAPP {
 			return "";
 		}
 		return file.substring(index);
+	}
+	
+	protected String storageImage(String folder, MultipartFile file) throws FileNotFoundException, IOException {
+
+		folder = StringUtil.toPath(folder);
+
+		String folderPath = ConstUtil.getResourcePath(); /// E:\resource or /appdata/resource
+		File folderRes = new File(folderPath, folder);
+		if (folderRes.exists() == false) {
+			folderRes.mkdirs();
+		}
+		
+		String suffix = this.suffix(file.getOriginalFilename());
+
+		String fileName = String.format("%014Xd-%s%s", System.currentTimeMillis(), new RandomString(14), suffix);
+		File fileImage = new File(folderRes, fileName);
+
+		file.transferTo(fileImage);
+
+		return folder + "/" + fileName;
 	}
 
 	protected String storageImage(String folder, InputStream imageStream, String suffix) throws FileNotFoundException, IOException {
