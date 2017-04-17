@@ -29,9 +29,16 @@ public class FuJianPhoneRequest extends __PhoneRequest implements IAPP {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = { "data" })
+	@RequestMapping(value = { "data.json" })
 	public Map<String, Object> data(HttpServletRequest request) throws Exception {
 		Map<String, Object> map = MapUtil.mapThem(new String[] { "datetime" }, DTUtil.nowDT());
+		
+		int len1 = fuJianService.getCountInt(null);
+		int len2 = heTongService.getCountInt(null);
+		
+		map.put("len1", len1);
+		map.put("len2", len2);
+		
 		return map;
 	}
 

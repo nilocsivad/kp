@@ -19,6 +19,7 @@ public interface IAPP {
 
 	String REQ = "com.iam_vip.kp.request.req";
 	String WEB = "com.iam_vip.kp.request.web";
+	String PHONE = "com.iam_vip.kp.request.phone";
 
 	String ONLINE_REQ = "req";
 	String ONLINE_WEB = "web";

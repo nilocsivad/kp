@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:c="http://www.springframework.org/schema/c" xmlns:cache="http://www.springframework.org/schema/cache" xmlns:context="http://www.springframework.org/schema/context" xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee" xmlns:lang="http://www.springframework.org/schema/lang" xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring" xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		"
+	default-autowire="byName">
+
+
+
+	<!-- 
+	/// il8n 资源需在此处加载, 否则在 java 文件中执行
+	/// ContextLoader.getCurrentWebApplicationContext().getMessage(code, null, locale);
+	/// 取不到值
+	 -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="il8n.messages" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="useCodeAsDefaultMessage" value="true" />
+		<property name="fallbackToSystemLocale" value="true" />
+	</bean>
+
+
+
+
+	<context:annotation-config />
+
+	<context:component-scan base-package="com.iam_vip.kp">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+
+
+
+
+	<context:property-placeholder location="classpath:config/datasource-mysql.properties" />
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${mysql.url}" />
+		<property name="username" value="${mysql.username}" />
+		<property name="password" value="${mysql.password}" />
+	</bean>
+
+
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:config/sqlMapConfig.xml" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="sqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+
+
+
+
+
+
+
+
+
+	<bean lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="autoStartup" value="true" />
+		<property name="triggers">
+			<list>
+				<ref bean="kpSchedulerTrigger" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- http://www.oschina.net/question/8676_9032 -->
+	<!-- http://my.oschina.net/jeffli1993/blog/265785 -->
+	<!-- http://www.quartz-scheduler.org/ -->
+	<!-- 定时触发器 -->
+	<bean id="kpSchedulerTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<!-- 表达式的格式：秒 分 时 日 月 周 年(可选) -->
+		<!-- 每 3 分钟执行一次 -->
+		<!-- 当前分钟数应与 com.lanji.system.utils.ConstUtil 配置的时间一致 -->
+		<property name="cronExpression" value="0 */3 * * * ?" />
+		<property name="jobDetail" ref="kpJobDetail" />
+	</bean>
+
+	<bean id="kpJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 是否允许任务并发执行 当值为false时 表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+		<property name="concurrent" value="false" />
+		<property name="targetObject" ref="schedulerTaskJob" />
+		<property name="targetMethod" value="doTask" />
+	</bean>
+
+	<bean id="schedulerTaskJob" class="com.iam_vip.kp.rs.quartz.job.SchedulerTaskJob" />
+
+
+
+
+
+
+
+
+
+
+
+	<!-- 
+	/// 程序运行常量 ///
+	 -->
+	<bean class="com.iam_vip.kp.rs.util.ConstUtil" scope="singleton">
+		<constructor-arg name="mapData">
+			<map key-type="java.lang.String" value-type="java.lang.String">
+				<!-- /// 资源文件夹对外访问前缀,对应 Tomcat <Context path="" /> /// -->
+				<entry key="resourcePrefix" value="mp2017rs" />
+				<!-- /// 服务器本地资源文件夹,对应 Tomcat <Context docBase="" /> /// -->
+				<entry key="resourcePath" value="D:/tmp/mp2017" />
+				<!-- /// 后台 session 验证未通过跳转 URL /// -->
+				<entry key="houtTaiAuthorizationFailed" value="/req" />
+				<!-- /// PC web 前台 session 验证未通过跳转 URL /// -->
+				<entry key="webAuthorizationFailed" value="/web" />
+				<!-- /// 默认头像 /// -->
+				<entry key="defaultPortrait" value="/no-header.jpg" />
+				<!-- /// 手机首页爱心滚动条显示格式 /// -->
+				<entry key="loveHeartTextLine" value="%s 在 [%s] %s" />
+				<!-- /// 默认提示语音文件 /// -->
+				<entry key="voiceRemind" value="voice/ding-ding.mp3" />
+				<!-- /// 微信回调URL /// -->
+				<entry key="wxNotifyURL" value="http://swz.landgy.com:6161/phone/wechat/notify/callback" />
+				<!-- /// API KEY /// -->
+				<entry key="wxApiKey" value="yuanquanyuanquanyuanquanyuanquan" />
+				<!-- /// APP在微信里的ID /// -->
+				<entry key="wxAppID" value="wxf7c073ff164ddf90" />
+				<!-- /// 微信商户ID /// -->
+				<entry key="wxMchID" value="1449676702" />
+			</map>
+		</constructor-arg>
+		<constructor-arg name="numMapData">
+			<map key-type="java.lang.String" value-type="java.lang.Integer">
+				<!-- /// 验证码有效期(分钟) /// -->
+				<!-- /// 手机用户多久(天)需重新登录 /// -->
+				<entry key="mobileAuthorization" value="30" /> 
+				<!-- /// 验证码重新发送时间间隔 /// -->
+				<entry key="validCodeSecond" value="120" />
+				<!-- /// 本地不发送短信,部署到服务器需改为1 /// -->
+				<entry key="onServer" value="0" />
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 
+	/// 短信相关配置 ///
+	 -->
+	<!-- <bean class="com.iam_vip.kp.rs.util.MMSUtil" scope="singleton">
+		<constructor-arg name="mapData">
+			<map key-type="java.lang.String" value-type="java.lang.String">
+				<entry key="url" value="http://dx.ipyy.net/smsJson.aspx?action=send" />
+				<entry key="user" value="xd000979" />
+				<entry key="pwd" value="bj-21009" />
+				<entry key="reg" value="【守望者手环】注册验证码为%s，30分钟内有效，请在手机客户端注册页内填写。" />
+				<entry key="forgot" value="【守望者手环】密码找回验证码为%s，30分钟内有效，请在手机客户端密码找回页内填写。" />
+			</map>
+		</constructor-arg>
+	</bean> -->
+	
+	<!-- 
+	/// JPush 相关配置
+	 -->
+	<!-- <bean class="com.iam_vip.kp.rs.util.JPushUtil" scope="singleton">
+		<constructor-arg name="appKey" type="java.lang.String" value="dcc4aeaf41025e4c6bf437d7" />
+		<constructor-arg name="masterSecret" type="java.lang.String" value="bb27bd46a232c7619e94fcaf" />
+		True 表示推送生产环境，False 表示要推送开发环境；如果不指定则为推送生产环境。JPush 官方 API LIbrary (SDK) 默认设置为推送 “开发环境”。
+		<constructor-arg name="apns_production" type="java.lang.Boolean" value="false" />
+	</bean> -->
+
+</beans>
